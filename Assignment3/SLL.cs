@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace Assignment3
     public class SLL : ILinkedListADT
     {
         private Node head;
-        private int listSize;
+        private int listSize = 0;
 
         public SLL()
         {
@@ -21,7 +22,7 @@ namespace Assignment3
             Node tempNode = head;
             while (tempNode!=null)
             {
-                if(tempNode.Equals(target)) 
+                if (tempNode.Data == target)
                     return true;
 
                 tempNode = tempNode.Next;
@@ -93,6 +94,7 @@ namespace Assignment3
             if (head == null)
             {
                 head = newNode;
+                listSize++;
                 return;
             }
             Node currentNode = head;
@@ -105,58 +107,6 @@ namespace Assignment3
         }
         public void Remove(int index)
         {
-            if (index < 0 || index >= listSize)
-            {
-                throw new IndexOutOfRangeException("Index is out of range.");
-            }
-
-            if (index == 0)
-            {
-                listSize--;
-                RemoveFirst();
-                return;
-            }
-
-            Node currentNode = head;
-            Node previousNode = null;
-            int currentIndex = 0;
-
-            while (currentIndex < index)
-            {
-                previousNode = currentNode;
-                currentNode = currentNode.Next;
-                currentIndex++;
-
-                previousNode.Next = currentNode.Next;
-                listSize--;
-            }
-        }
-        public void RemoveLast()
-        {
-
-            if (head == null)
-            {
-                return;
-            }
-
-            if (head.Next == null)
-            {
-                head = null;
-                return;
-            }
-
-            Node previousNode = null;
-            Node currentNode = head;
-            while (currentNode != null)
-            {
-                previousNode = currentNode;
-                currentNode = currentNode.Next;
-            }
-            listSize--;
-        }
-
-        public void RemvoveAt(int index)
-        {
 
             if (index < 0)
             {
@@ -165,7 +115,6 @@ namespace Assignment3
 
             if (index == 0)
             {
-                listSize--;
                 RemoveFirst();
                 return;
             }
@@ -184,16 +133,40 @@ namespace Assignment3
             listSize--;
 
         }
-
-        public void RemoveFirst()
+        public void RemoveLast()
         {
-            listSize--;
+
             if (head == null)
             {
                 return;
             }
 
+            if (head.Next == null)
+            {
+                head = null;
+                return;
+            }
+
+            Node previousNode = null;
+            Node currentNode = head;
+            while (currentNode.Next != null)
+            {
+                previousNode = currentNode;
+                currentNode = currentNode.Next;
+            }
+            previousNode.Next = null;
+            listSize--;
+        }
+
+
+        public void RemoveFirst()
+        {
+            if (head == null)
+            {
+                return;
+            }
             head = head.Next;
+            listSize--;
         }
 
 
@@ -213,6 +186,13 @@ namespace Assignment3
             Node currentNode = head;
             Node previous = null;
             Node next = null;
+
+            if (index == 0)
+            {
+                node.Next = currentNode.Next;
+                head = node;
+                return;
+            }
             for (int i = 0; i < index; i++)
             {
                 previous = currentNode;
@@ -252,5 +232,22 @@ namespace Assignment3
 
             return listSize;
         }
+        public override string ToString()
+        {
+            string tempString = "";
+            Node tempNode = head;
+            while (tempNode != null)
+            {
+                User tempUser = (User)tempNode.Data;
+                if (tempNode.Next != null)
+                    tempString += tempUser.Name + " -> ";
+                else tempString += tempUser.Name;
+                tempNode = tempNode.Next;
+
+            }
+
+            return tempString;
+        }
+
     }
 }
